@@ -1,0 +1,33 @@
+<?php
+require('connect.php');
+
+$json_array = array();
+
+if (isset($_POST['submit'])) {
+    $listsql = "SELECT * FROM restdtaall";
+    $listResult = $connect->query($listsql);
+
+    while ($listrow = $listResult->fetch_assoc()) {
+        $json_array[] = $listrow;
+    }
+
+    // Convert the PHP array to a JSON string with pretty-printing
+    $json_data = json_encode($json_array, JSON_PRETTY_PRINT);
+
+    // Set the content type header to indicate JSON response
+    header('Content-Type: application/json');
+
+    // Echo the formatted JSON data
+    echo $json_data;
+
+    // Specify the file path where you want to save the JSON data
+    $json_file_path = 'output.json';
+
+    // Save the JSON data to the file
+    if (file_put_contents($json_file_path, $json_data)) {
+        echo "JSON data has been saved to $json_file_path";
+    } else {
+        echo "Error saving JSON data to $json_file_path";
+    }
+}
+?>
